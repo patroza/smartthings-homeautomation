@@ -1,6 +1,7 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
+        "target": "ES2022",
         "lib": [
             "esnext"
         ],
@@ -23,8 +24,7 @@
         },
         "outDir": "./dist",
         "types": [
-            "@types/node",
-            "./types/modules"
+            "@types/node"
         ],
         "transformers": [
             // Transform paths in output .js files

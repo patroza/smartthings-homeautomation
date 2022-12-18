@@ -1,9 +1,7 @@
 import dotenv from "dotenv"
-import cp from "child_process"
 import f from "fastify"
 import S from "fluent-json-schema"
-// import util from "util"
-// const exec = util.promisify(cp.exec);
+import { Modes, exec, setSoundMode } from "./commands"
 
 const envFile = "./.env.local"
 
@@ -14,31 +12,10 @@ if (error) {
   console.log("loading env from: " + envFile)
 }
 
-const TOKEN = process.env["TOKEN"]
 const PORT = process.env["PORT"] ? parseInt(process.env["PORT"]) : 3000
-
-function command(cmd: string, args: string) {
-  return `smartthings ${cmd} -j ${TOKEN ? `--token ${TOKEN} ` : ""}${args}`
-}
-
-function setSoundMode(deviceId: string, soundMode: Modes) {
-  return command("devices:commands", `${deviceId} 'execute:execute("/sec/networkaudio/soundmode", { "x.com.samsung.networkaudio.soundmode":"${soundMode}" })'`)
-}
-
-const exec = (cmd: string) =>  {
-  //console.debug("cmd: ", cmd)
-  const r = cp.execSync(cmd, { encoding: "utf-8" })
-  //console.log("r: ", r)
-  if (r.startsWith("Command executed successfully")) {
-    return undefined
-  }
-  return JSON.parse(r) as unknown
-}
-
 
 const fastify = f({ logger: true })
 
-type Modes = "standard" | "surround" | "game" | "adaptive"
 interface Params {
   id: string
   mode: Modes

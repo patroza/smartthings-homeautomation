@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "watcher": "ts-node ./_src/watcher.ts",
     "start": "ts-node ./_src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
