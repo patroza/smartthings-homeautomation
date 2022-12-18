@@ -17,9 +17,24 @@ if (error) {
 const TOKEN = process.env["TOKEN"]
 const PORT = process.env["PORT"] ? parseInt(process.env["PORT"]) : 3000
 
-function setSoundMode(deviceId: string, soundMode: Modes) {
-  return `smartthings devices:commands ${TOKEN ? `--token ${TOKEN} ` : ""}${deviceId} 'execute:execute("/sec/networkaudio/soundmode", { "x.com.samsung.networkaudio.soundmode":"${soundMode}" })'`
+function command(cmd: string, args: string) {
+  return `smartthings ${cmd} -j ${TOKEN ? `--token ${TOKEN} ` : ""}${args}`
 }
+
+function setSoundMode(deviceId: string, soundMode: Modes) {
+  return command("devices:commands", `${deviceId} 'execute:execute("/sec/networkaudio/soundmode", { "x.com.samsung.networkaudio.soundmode":"${soundMode}" })'`)
+}
+
+const exec = (cmd: string) =>  {
+  //console.debug("cmd: ", cmd)
+  const r = cp.execSync(cmd, { encoding: "utf-8" })
+  //console.log("r: ", r)
+  if (r.startsWith("Command executed successfully")) {
+    return undefined
+  }
+  return JSON.parse(r) as unknown
+}
+
 
 const fastify = f({ logger: true })
 
@@ -34,9 +49,9 @@ fastify.get(
   { schema: { params: S.object().prop("id", S.string()).prop("mode", S.enum(["standard", "surround", "game", "adaptive"]) ) } },
   async (request, reply ) => {
     const params = request.params as Params // yuk
-    cp.execSync(setSoundMode(params.id, params.mode))
-    reply.status(204)
-  return
+    const r = exec(setSoundMode(params.id, params.mode))
+    reply.status(r ? 200 : 204)
+    return r
 })
 
 const start = async () => {
