@@ -19,16 +19,32 @@ function inputSource(): string {
   return r.inputSource.value
 }
 
-async function run() {
-  
-while (true) {
-  if (isOn()) {
-    await exec(setSoundMode(soundBar, inputSource() === "HDMI3" ? "game" : "surround"))
+function tryIsOn(): boolean {
+  try {
+    return isOn()
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}
+
+async function iteration() {
+  if (tryIsOn()) {
+    await exec(setSoundMode(soundBar, inputSource() === "HDMI1" ? "game" : "surround"))
   } else {
     await exec(setSoundMode(soundBar, "standard"))
   }
-  await new Promise(r => setTimeout(r, 10_000))
 }
+
+async function run() {
+  while (true) {
+    try {
+      await iteration()
+    } catch (err) {
+      console.error(err)
+    }
+    await new Promise(r => setTimeout(r, 30_000))
+  }
 }
 
 run().catch(console.error)
