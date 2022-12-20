@@ -4,7 +4,7 @@ const TV = process.argv[2]
 if (!TV) { throw new Error("missing TV id")}
 
 const SOUNDBAR = process.argv[3]
-if (!SOUNDBAR) { throw new Error("missing TV id")}
+if (!SOUNDBAR) { throw new Error("missing soundbar id")}
 
 const tv = TV
 const soundBar = SOUNDBAR
