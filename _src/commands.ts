@@ -1,12 +1,12 @@
 import cp from "child_process"
 // import util from "util"
 // const exec = util.promisify(cp.exec);
-const TOKEN = process.env["TOKEN"]
 
 
 export type Modes = "standard" | "surround" | "game" | "adaptive"
 
 export function command(cmd: string, args: string) {
+  const TOKEN = process.env["TOKEN"]
   return `smartthings ${cmd} -j ${TOKEN ? `--token ${TOKEN} ` : ""}${args}`
 }
 

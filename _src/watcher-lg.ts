@@ -39,6 +39,7 @@ function iteration() {
       console.log("connecting..")
       var lgtv = lgtv2({
         url: `ws://${tv}:3000`,
+        reconnect: 0, // TODO: maybe use a single instance, and actually leverage the auto reconnect...
       });
 
       lgtv.on('error', function (err) {
