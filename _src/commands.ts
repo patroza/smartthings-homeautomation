@@ -18,6 +18,10 @@ export function getSwitch(deviceId: string) {
   return command("devices:capability-status", `${deviceId} 1 27`)
 }
 
+export function getHealth(deviceId: string) {
+  return command("devices:health", `${deviceId}`)
+}
+
 export function getInputSource(deviceId: string) {
   return command("devices:capability-status", `${deviceId} 1 12`)
 }

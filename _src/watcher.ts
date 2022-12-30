@@ -1,4 +1,4 @@
-import { exec, getInputSource, getSwitch, setSoundMode } from "./commands"
+import { exec, getHealth, getInputSource, getSwitch, setSoundMode } from "./commands"
 
 const TV = process.argv[2]
 if (!TV) { throw new Error("missing TV id")}
@@ -10,8 +10,12 @@ const tv = TV
 const soundBar = SOUNDBAR
 
 function isOn(): boolean {
+  const health = exec(getHealth(tv)) as any
+  if (health.state === "OFFLINE") {
+    return false
+  }
   const r = (exec(getSwitch(tv)) as any)
-  return r.switch.value === "on" && new Date(r.switch.timestamp).getTime() > Date.now() - 1000 * 60 * 60 * 24
+  return r.switch.value === "on"
 }
 
 function inputSource(): string {
